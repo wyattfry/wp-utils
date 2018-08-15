@@ -25,16 +25,16 @@ if [[ $# -eq 2 ]]
 then
   # Assume wp-backup.sh SOURCE_DIR TARGET_DIR
   # e.g. wp-backup.sh /home/user/public_html/some_subdir /home/user/wp-backups
-  if [[! -e $1 ]]
+  if [[ ! -e $1 ]]
   then
     echo "Could not read source directory '$1'" >&2
     exit 1
-  elif [[! -e $2 ]]
+  elif [[ ! -e $2 ]]
   then
     echo "Could not read target directory '$2'" >&2
     exit 1
   fi
-  
+
   WP_PATH="$(cd "$(dirname "$1")"; pwd)/"
   WP_DIR="$(basename "$1")"
   BACKUP_DIR="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"

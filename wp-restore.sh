@@ -34,18 +34,18 @@ DBNAME=${USER}_wp314
 DBUSER=${USER}_wp314
 DBPASS="$(cat password)"
 
-if [[! -e $1 ]]
+if [[ ! -e $1 ]]
 then
   echo "Could not read source backup archive '$1'" >&2
   exit 1
-elif [[! -e $2 ]]
+elif [[ ! -e $2 ]]
 then
   echo "Could not read target WordPress directory '$2'" >&2
   exit 1
 fi
 
-WP_PATH="$(cd "$(dirname "$1")"; pwd)/"
-WP_DIR="$(basename "$1")"
+WP_PATH="$(cd "$(dirname "$2")"; pwd)/"
+WP_DIR="$(basename "$2")"
 
 # Validate archive provided as first argument, i.e. contains an viable .sql file in the WP root, whatever else
 
