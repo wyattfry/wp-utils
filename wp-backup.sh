@@ -17,6 +17,7 @@ then
   exit 1
 fi
 
+
 # Automatic Wordpress Backup of database and files
 DBNAME=${USER}_wp314
 DBUSER=${USER}_wp314

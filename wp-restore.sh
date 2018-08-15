@@ -34,6 +34,16 @@ DBNAME=${USER}_wp314
 DBUSER=${USER}_wp314
 DBPASS="$(cat password)"
 
+
+# If database user does not exist, create it
+mysql -u root -p$DBPASS $DBNAME -e "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${DBUSER}');"
+if [[ "${USER_EXISTS}" -eq 0 ]]
+then
+  # create user
+  mysql -u root -p$DBPASS $DBNAME -e "GRANT ALL PRIVILEGES ON *.* TO '${DBUSER}'@'localhost' IDENTIFIED BY '${DBPASS}';"
+fi
+
+
 if [[ ! -e $1 ]]
 then
   echo "Could not read source backup archive '$1'" >&2
@@ -54,11 +64,11 @@ if [[ -d ${WP_PATH}${WP_DIR} ]]
 then
   echo "WordPress directory ${WP_PATH}${WP_DIR} already exists. It will be overwritten."
 fi
-rm -rf ${WP_PATH}${WP_DIR}
-checkexit "Deleting ${WP_PATH}${WP_DIR}"
+rm -rf ${WP_PATH}${WP_DIR}/*
+checkexit "Deleting ${WP_PATH}${WP_DIR}/*"
 
 # Extract contents of archive to WP directory
-tar -zxvf $1 -C $WP_PATH
+tar --strip-components=1 -zxvf $1 -C ${WP_PATH}${WP_DIR}
 checkexit "Extracting $1"
 
 # If WP database exists, drop it
