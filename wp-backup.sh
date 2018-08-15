@@ -18,11 +18,32 @@ then
 fi
 
 # Automatic Wordpress Backup of database and files
-DBNAME=wyatruoy_wp314
-DBUSER=wyatruoy_wp314
+DBNAME=${USER}_wp314
+DBUSER=${USER}_wp314
 DBPASS=$(cat password)
-WP_PATH=/home/wyatruoy/public_html/
-WP_DIR=modeltoc
+if [[ $# -eq 2 ]]
+then
+  # Assume wp-backup.sh SOURCE_DIR TARGET_DIR
+  # e.g. wp-backup.sh /home/user/public_html/some_subdir /home/user/wp-backups
+  if [[! -e $1 ]]
+  then
+    echo "Could not read source directory '$1'" >&2
+    exit 1
+  elif [[! -e $2 ]]
+  then
+    echo "Could not read target directory '$2'" >&2
+    exit 1
+  fi
+  
+  WP_PATH="$(cd "$(dirname "$1")"; pwd)/"
+  WP_DIR="$(basename "$1")"
+  BACKUP_DIR="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"
+else
+  WP_PATH=/home/${USER}/
+  WP_DIR=public_html
+  BACKUP_DIR="/home/${USER}/wp-backups/"
+fi
+
 TIME_STAMP="$(date +%F-%N)"
 SQL_FILE="${WP_PATH}${WP_DIR}/${DBNAME}-${TIME_STAMP}.sql"
 
@@ -34,7 +55,6 @@ echo "Database '${DBNAME}' successfully exported to ${SQL_FILE}"
 
 
 # Archive and compress wp folder and save to backup directory
-BACKUP_DIR="/home/wyatruoy/modeltoc-backups/"
 tar -zcvf "${BACKUP_DIR}${WP_DIR}-${TIME_STAMP}.tar.gz" -C ${WP_PATH} ${WP_DIR}
 checkexit "WordPress directory backup"
 echo "WordPress directory backed up at ${BACKUP_DIR}${WP_DIR}-${TIME_STAMP}"
