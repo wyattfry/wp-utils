@@ -1,3 +1,4 @@
-.wp-backup.sh.swo
-.wp-backup.sh.swp
+*.swo
+*.swp
 password
+*.swn

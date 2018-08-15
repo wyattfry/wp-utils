@@ -36,12 +36,12 @@ DBPASS="$(cat password)"
 
 
 # If database user does not exist, create it
-mysql -u root -p$DBPASS $DBNAME -e "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${DBUSER}');"
-if [[ "${USER_EXISTS}" -eq 0 ]]
-then
+#mysql -u root -p$DBPASS $DBNAME -e "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '${DBUSER}');"
+#if [[ "${USER_EXISTS}" -eq 0 ]]
+#then
   # create user
-  mysql -u root -p$DBPASS $DBNAME -e "GRANT ALL PRIVILEGES ON *.* TO '${DBUSER}'@'localhost' IDENTIFIED BY '${DBPASS}';"
-fi
+#  mysql -u root -p$DBPASS $DBNAME -e "GRANT ALL PRIVILEGES ON *.* TO '${DBUSER}'@'localhost' IDENTIFIED BY '${DBPASS}';"
+#fi
 
 
 if [[ ! -e $1 ]]
@@ -75,7 +75,8 @@ checkexit "Extracting $1"
 mysql -u $DBUSER -p$DBPASS $DBNAME -e "DROP DATABASE ${DBNAME};CREATE DATABASE ${DBNAME}"
 
 # Import .sql file into database
-SQL_FILE=${WP_PATH}${WP_DIR}/${DBNAME}*.sql
+# SQL_FILE=${WP_PATH}${WP_DIR}/${DBNAME}.sql
+SQL_FILE=${WP_PATH}${WP_DIR}/*.sql
 mysql -u $DBUSER -p$DBPASS $DBNAME < $SQL_FILE
 checkexit "Importing ${SQL_FILE}"
 
@@ -83,3 +84,8 @@ checkexit "Importing ${SQL_FILE}"
 rm $SQL_FILE
 checkexit "Deleting ${SQL_FILE}"
 exit 0
+
+# Make sure wp-config has the correct info for db user and db name
+# TODO use sed or whatever to do a search / replace on the following lines:
+# define('DB_NAME', '{USER}_wp314');
+# define('DB_USER', '{USER}_wp314');

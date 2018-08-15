@@ -56,9 +56,9 @@ echo "Database '${DBNAME}' successfully exported to ${SQL_FILE}"
 
 
 # Archive and compress wp folder and save to backup directory
-tar -zcvf "${BACKUP_DIR}${WP_DIR}-${TIME_STAMP}.tar.gz" -C ${WP_PATH} ${WP_DIR}
+tar -zcvf "${BACKUP_DIR}/${WP_DIR}-${TIME_STAMP}.tar.gz" -C ${WP_PATH} ${WP_DIR}
 checkexit "WordPress directory backup"
-echo "WordPress directory backed up at ${BACKUP_DIR}${WP_DIR}-${TIME_STAMP}"
+echo "WordPress directory backed up at ${BACKUP_DIR}/${WP_DIR}-${TIME_STAMP}.tar.gz"
 
 # Clean up exported sql file
 rm ${SQL_FILE}
